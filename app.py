@@ -11,10 +11,15 @@ from linebot.models import *
 
 app = Flask(__name__)
 
-line_bot_api = LineBotApi('IggejjtYm0rLnHJ7aLVk2w1S9mqm8roItmjWuZ2NP0pvLefHbu1lkcnHLDkJYaXnlDn+CKdddMM4rhCn8lTtW1I5qCQakKN2Jym/dzzWojM/KhPicMAxsaBcK/4NHDlgq4677UQUfYza0ZaI1Pnr8wdB04t89/1O/w1cDnyilFU=')
 # Channel access token (long-lived)
-handler = WebhookHandler('7b7ac971727df0611a71e5ad86b63272')
+line_bot_api = LineBotApi('IggejjtYm0rLnHJ7aLVk2w1S9mqm8roItmjWuZ2NP0pvLefHbu1lkcnHLDkJYaXnlDn+CKdddMM4rhCn8lTtW1I5qCQakKN2Jym/dzzWojM/KhPicMAxsaBcK/4NHDlgq4677UQUfYza0ZaI1Pnr8wdB04t89/1O/w1cDnyilFU=')
+
 # Channel secret 
+handler = WebhookHandler('7b7ac971727df0611a71e5ad86b63272')
+
+# User ID
+userID = 'Ue7ec45513a34d6c0353321d0166b7877'
+
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -33,48 +38,15 @@ def callback():
 
     return 'OK'
 
-    if event.message.text.startswith('貼圖'):
-        text = event.message.text
-        _, package_id, sticker_id = text.split('-')
-        message = StickerSendMessage(
-            package_id=int(package_id),
-            sticker_id=int(sticker_id)
-        )
-        line_bot_api.reply_message(event.reply_token, message)
-
-def getNews():
-    """
-    建立一個抓最新消息的function
-    """
-    import requests
-    import re
-    from bs4 import BeautifulSoup
-
-    url = 'https://www.ettoday.net/news/focus/3C%E5%AE%B6%E9%9B%BB/'
-    r = requests.get(url)
-    reponse = r.text
-
-    url_list = re.findall(r'<h3><a href="/news/[\d]*/[\d]*.htm" .*>.*</a>',reponse)
-
-    soup = BeautifulSoup(url_list[0])
-    url = 'https://fashion.ettoday.net/' + soup.find('a')['href']
-    title = soup.text
+def get_time():
+	from datetime import datetime 
+	now_time = datetime.now().strftime('%Y-%m-%d %H:%M')
+	return now_time
+	
+message = TextSendMessage( get_time())
+line_bot_api.push_message(userID, message)
 
 
-    tmp = title + ': ' +url
-    return tmp
-
-@handler.add(MessageEvent, message=TextMessage)
-def handle_message(event):
-    # 傳送文字
-        if event.message.text.startswith('貼圖'):
-            text = event.message.text
-            _, package_id, sticker_id = text.split('-')
-            message = StickerSendMessage(
-                package_id=int(package_id),
-                sticker_id=int(sticker_id)
-            )
-            line_bot_api.reply_message(event.reply_token, message)
-
+	
 if __name__ == '__main__':
     app.run(debug=True)
