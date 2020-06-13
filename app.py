@@ -67,12 +67,12 @@ def getNews():
 def handle_message(event):
     # 傳送文字
         if event.message.text.startswith('貼圖'):
-        text = event.message.text
-        _, package_id, sticker_id = text.split('-')
-        message = StickerSendMessage(
-            package_id=int(package_id),
-            sticker_id=int(sticker_id)
-        )
+            text = event.message.text
+            _, package_id, sticker_id = text.split('-')
+            message = StickerSendMessage(
+                package_id=int(package_id),
+                sticker_id=int(sticker_id)
+            )
 
 if __name__ == '__main__':
     app.run(debug=True)
