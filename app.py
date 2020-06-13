@@ -40,6 +40,7 @@ def callback():
             package_id=int(package_id),
             sticker_id=int(sticker_id)
         )
+        line_bot_api.reply_message(event.reply_token, message)
 
 def getNews():
     """
@@ -73,6 +74,7 @@ def handle_message(event):
                 package_id=int(package_id),
                 sticker_id=int(sticker_id)
             )
+            line_bot_api.reply_message(event.reply_token, message)
 
 if __name__ == '__main__':
     app.run(debug=True)
