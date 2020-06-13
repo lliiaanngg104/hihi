@@ -66,11 +66,13 @@ def getNews():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     # 傳送文字
-    if event.message.text == '傳送文字':
-        message = TextSendMessage(getNews())
-    else:
-        message = TextSendMessage(text=event.message.text)
-    line_bot_api.reply_message(event.reply_token, message)
+        if event.message.text.startswith('貼圖'):
+        text = event.message.text
+        _, package_id, sticker_id = text.split('-')
+        message = StickerSendMessage(
+            package_id=int(package_id),
+            sticker_id=int(sticker_id)
+        )
 
 if __name__ == '__main__':
     app.run(debug=True)
